@@ -1,45 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap');
+
 body {
+    color: white;
+    font-family: 'Oxygen', 'Arial', sans-serif;
     margin: 0;
     min-height: 100svh;
-    min-width: 100vw;
-    overflow: hidden;
-}
+    display: flex;
 
-body > div {
-    flex-grow: 1;
-    flex-basis: 1;
-    height: 100vh;
-    position: relative;
-    overflow: hidden;
-    background-size: cover;
-    background-attachment: fixed;
+    & > div {
+        flex: 1 1 0;
+        padding: 1rem;
+        background-size: cover;
+        background-attachment: fixed;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+    }
+
+    & :is(input, button) {
+        color: inherit;
+        font-family: inherit;
+    }
 }
 
 #today {
-    flex-grow: 2;
-    flex-basis: 2;
+    flex: 2 1 0;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    & input {
+        background-color: transparent;
+        border: 3px solid white;
+        border-radius: 1.2em;
+        padding: 0.4rem 0.8rem;
+        font-size: 1.2rem;
+
+        &::placeholder {
+            color: white;
+            opacity: 1;
+        }
+
+        &:focus:not(:focus-visible) {
+            outline: none;
+        }
+    }
 }
 
-.flex {
-    display: flex;
-}
-
-.sunny {
+[data-weather='sunny'] {
     background-image: url('../images/sunny.webp');
 }
 
-.rain {
+[data-weather='rain'] {
     background-image: url('../images/rain.webp');
 }
 
-.snow {
+[data-weather='snow'] {
     background-image: url('../images/snow.webp');
 }
 
-.cloudy {
+[data-weather='cloudy'] {
     background-image: url('../images/cloudy.webp');
 }
 
-.storm {
+[data-weather='storm'] {
     background-image: url('../images/storm.webp');
 }
