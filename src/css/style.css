@@ -5,17 +5,14 @@ body {
     font-family: 'Oxygen', 'Arial', sans-serif;
     margin: 0;
     min-height: 100svh;
+    min-width: 100vw;
     overflow: hidden;
     display: flex;
 
     & > div {
-        flex: 1 1 0;
-        padding: 1rem;
         background-size: cover;
         background-attachment: fixed;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
+        padding: 1rem;
     }
 
     & :is(input, button) {
@@ -40,7 +37,11 @@ form {
 
 #today {
     flex: 2 1 0;
+    width: 25%;
+    display: flex;
+    flex-direction: column;
     justify-content: space-between;
+    padding-left: 1.5rem;
 
     & input {
         border: 3px solid white;
@@ -59,15 +60,23 @@ form {
     }
 }
 
-.seven-day {
-    align-self: center;
+#text-details > *:not(:first-child) {
+    font-weight: 400;
+    margin-block: 0.5rem;
+}
+
+.week {
+    /* for initial load transition */
+    width: 12.5%;
+
+    flex: 1 1 0;
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
     align-items: center;
     flex-wrap: nowrap;
     text-align: center;
     white-space: nowrap;
-    margin-bottom: 2rem;
 
     & > * {
         margin: 0;
@@ -76,6 +85,10 @@ form {
     & > .average-temp {
         font-size: 2.3rem;
         font-weight: 600;
+    }
+
+    & > :last-child {
+        margin-bottom: 1rem;
     }
 }
 
@@ -93,6 +106,10 @@ form {
 
 [data-weather='cloudy'] {
     background-image: url('../images/cloudy.webp');
+}
+
+[data-weather='overcast'] {
+    background-image: url('../images/overcast.webp');
 }
 
 [data-weather='storm'] {
