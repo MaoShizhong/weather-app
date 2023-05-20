@@ -14,11 +14,6 @@ body {
         background-attachment: fixed;
         padding: 1rem;
     }
-
-    & :is(input, button) {
-        color: inherit;
-        font-family: inherit;
-    }
 }
 
 input,
@@ -47,6 +42,7 @@ form {
         border: 3px solid white;
         border-radius: 1.2em;
         padding: 0.4rem 0.8rem;
+        font-family: inherit;
         font-size: 1.2rem;
 
         &::placeholder {
@@ -65,10 +61,37 @@ form {
     margin-block: 0.5rem;
 }
 
-.week {
-    /* for initial load transition */
-    width: 12.5%;
+#current-weather {
+    align-self: center;
+}
 
+#units {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    & > button {
+        color: rgba(255, 255, 255, 0.329);
+        font-size: 1.4rem;
+        height: 2rem;
+        width: 2.5rem;
+        cursor: pointer;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+
+        &.current-btn {
+            color: white;
+            font-size: 2rem;
+            transition: 200ms ease;
+        }
+    }
+}
+
+.week {
     flex: 1 1 0;
     display: flex;
     flex-direction: column;
