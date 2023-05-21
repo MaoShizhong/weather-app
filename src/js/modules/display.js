@@ -16,10 +16,36 @@ export class DisplayController {
         input.value = '';
     }
 
-    static updateMainInfo(inCelcius) {
-        document.querySelector('#location').textContent = `${Forecast.location}`;
-        document.querySelector('#region').textContent = `${Forecast.region}`;
-        document.querySelector('#country').textContent = `${Forecast.country}`;
+    static updateMainInfo(inCelsius = true) {
+        const data = Forecast.getCurrentWeather();
+
+        let unit = 'C';
+        if (!inCelsius) {
+            data[1] = this.toFahrenheit(data[1]);
+            data[3] = this.toFahrenheit(data[3]);
+            data[4] = this.toFahrenheit(data[4]);
+            data[5] = this.toFahrenheit(data[5]);
+            unit = 'F';
+        }
+
+        const content = [Forecast.location, Forecast.region, Forecast.country, Forecast.date];
+        const textDetails = document.querySelectorAll('#text-details > *');
+        textDetails.forEach((field, i) => field.textContent = content[i]);
+
+        document.querySelector('.left > img').src = data[0];
+        document.querySelector('.left > h1').textContent = `${data[1]} \u00B0${unit}`;
+
+        const rightPanelContent = [
+            `<i>${data[2]}</i>`,
+            `Feels like ${data[3]}\u00B0${unit}`,
+            `<b>Max:</b>\xa0\xa0\xa0${data[4]} \u00B0${unit}`,
+            `<b>Min:</b>\xa0\xa0\xa0${data[5]} \u00B0${unit}`,
+            `<b>Chance of rain:</b>\xa0\xa0\xa0${data[6]}%`,
+        ];
+        const rightPanel = document.querySelectorAll('.right > *');
+        rightPanel.forEach((field, i) => field.innerHTML = rightPanelContent[i]);
+
+        document.querySelector('#today').dataset.weather = DisplayController.setDataWeather(data[2]);
     }
 
     static updateWeek(inCelcius = true) {
@@ -32,11 +58,12 @@ export class DisplayController {
     static updateDay(day, i, inCelsius = true) {
         const data = Forecast.getDaySummary(i);
 
-        const unit = inCelsius ? 'C' : 'F';
+        let unit = 'C';
         if (!inCelsius) {
-            data[2] = Math.round((data[2] * 9) / 5 + 32);
-            data[3] = Math.round((data[3] * 9) / 5 + 32);
-            data[4] = Math.round((data[4] * 9) / 5 + 32);
+            data[2] = this.toFahrenheit(data[2]);
+            data[3] = this.toFahrenheit(data[3]);
+            data[4] = this.toFahrenheit(data[4]);
+            unit = 'F';
         }
 
         day.querySelector('img').src = data[0];
@@ -45,31 +72,32 @@ export class DisplayController {
         day.querySelector('.min-max').textContent = `${data[3]} - ${data[4]} \u00B0${unit}`;
 
         // * update background image for section
-        day.dataset.weather = data[5].includes('sunny')
-            ? 'sunny'
-            : data[5].includes('rain')
-            ? 'rain'
-            : data[5].includes('snow')
-            ? 'snow'
-            : data[5].includes('cloudy')
-            ? 'cloudy'
-            : data[5].includes('overcast')
-            ? 'overcast'
-            : 'storm';
+        day.dataset.weather = DisplayController.setDataWeather(data[5]);
+    }
 
-        if (/sunny/.test(data[5])) {
-            day.dataset.weather = 'sunny';
-        } else if (/ice|snow|blizzard|sleet|(freez)(?!.+fog)/.test(data[5])) {
-            day.dataset.weather = 'snow';
-        } else if (/rain|shower|drizzle/.test(data[5])) {
-            day.dataset.weather = 'rain';
-        } else if (/cloudy|mist/.test(data[5])) {
-            day.dataset.weather = 'cloudy';
-        } else if (/fog|overcast/.test(data[5])) {
-            day.dataset.weather = 'overcast';
-        } else {
-            day.dataset.weather = 'storm';
+    static setDataWeather(condition) {
+        if (/sunny/i.test(condition)) {
+            return 'sunny';
         }
+        else if (/ice|snow|blizzard|sleet|(freez)(?!.+fog)/i.test(condition)) {
+            return 'snow';
+        }
+        else if (/rain|shower|drizzle/i.test(condition)) {
+            return 'rain';
+        }
+        else if (/cloudy|mist/i.test(condition)) {
+            return 'cloudy';
+        }
+        else if (/fog|overcast/i.test(condition)) {
+            return 'overcast';
+        }
+        else {
+            return 'storm';
+        }
+    }
+
+    static toFahrenheit(temp) {
+        return Math.round((temp * 9) / 5 + 32);
     }
 
     static changeUnits(e) {
