@@ -122,7 +122,7 @@ form {
     gap: 0.5rem;
 
     & > button {
-        color: rgba(0, 0, 0, 0.226);
+        color: rgba(255, 255, 255, 0.623);
         font-size: 1.3rem;
         height: 2rem;
         width: 2.5rem;
