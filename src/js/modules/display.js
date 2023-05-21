@@ -76,7 +76,7 @@ export class DisplayController {
     }
 
     static setDataWeather(condition) {
-        if (/sunny/i.test(condition)) {
+        if (/sunny|clear/i.test(condition)) {
             return 'sunny';
         }
         else if (/ice|snow|blizzard|sleet|(freez)(?!.+fog)/i.test(condition)) {
