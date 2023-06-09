@@ -1,13 +1,11 @@
 export class Forecast {
+    static city;
     static location;
-    static region;
-    static country;
-    static today;
-    static localTime;
-    static weekForecast;
+    static lastUpdatedLocalTime;
+    static forecast;
 
     static get date() {
-        const dateAsObj = new Date(this.localTime);
+        const dateAsObj = new Date(this.lastUpdatedLocalTime);
         return `${dateAsObj.toLocaleDateString('en-GB', {
             hour: 'numeric',
             minute: 'numeric',
@@ -20,20 +18,18 @@ export class Forecast {
     }
 
     static async getData(location) {
-        const key = 'dbe6006f758d40b3a43175139231905';
         const response = await fetch(
-            `https://api.weatherapi.com/v1/forecast.json?key=${key}&q=${location}&days=7&aqi=no&alerts=no`,
+            `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/next7days?unitGroup=metric&include=days%2Ccurrent&key=ZT3UKYQ382UL3EH7F7WRSF2AW&contentType=json`,
             { mode: 'cors' }
         );
-        const weatherData = await response.json();
 
         if (response.ok) {
-            this.location = await weatherData.location.name;
-            this.region = await weatherData.location.region;
-            this.country = await weatherData.location.country;
-            this.today = await weatherData.current;
-            this.localTime = await weatherData.location.localtime;
-            this.weekForecast = await weatherData.forecast.forecastday;
+            const weatherData = await response.json();
+            const cityLocationSplit = await weatherData.resolvedAddress.indexOf(',');
+            this.city = await weatherData.resolvedAddress.slice(0, cityLocationSplit);
+            this.location = await weatherData.resolvedAddress.slice(cityLocationSplit + 2);
+            this.lastUpdatedLocalTime = `${await weatherData.days[0].datetime}T${await weatherData.currentConditions.datetime}`;
+            this.forecast = await weatherData.days;
         }
         else {
             throw 'No location found with that name!';
@@ -41,31 +37,28 @@ export class Forecast {
     }
 
     static getCurrentWeather() {
-        const current = this.today;
-        const currentExtra = this.weekForecast[0];
+        const current = this.forecast[0];
 
         return [
-            current.condition.icon,
-            Math.round(current.temp_c),
-            current.condition.text,
-            Math.round(current.feelslike_c),
-            Math.round(currentExtra.day.maxtemp_c),
-            Math.round(currentExtra.day.mintemp_c),
-            Math.round(currentExtra.day.daily_chance_of_rain),
+            Math.round(current.temp),
+            current.conditions,
+            Math.round(current.feelslike),
+            Math.round(current.tempmax),
+            Math.round(current.tempmin),
+            Math.round(current.precipprob),
         ];
     }
 
     static getDaySummary(i) {
-        const day = this.weekForecast[i];
-        const date = new Date(day.date);
+        const day = this.forecast[i];
+        const date = new Date(day.datetime);
 
         return [
-            day.day.condition.icon,
             date.toLocaleDateString('en-GB', { weekday: 'short' }),
-            Math.round(day.day.avgtemp_c),
-            Math.round(day.day.mintemp_c),
-            Math.round(day.day.maxtemp_c),
-            day.day.condition.text,
+            Math.round(day.temp),
+            Math.round(day.tempmin),
+            Math.round(day.tempmax),
+            day.conditions,
         ];
     }
 }
