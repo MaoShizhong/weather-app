@@ -19,12 +19,13 @@ export class Forecast {
 
     static async getData(location) {
         const response = await fetch(
-            `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/next7days?unitGroup=metric&include=days%2Ccurrent&key=ZT3UKYQ382UL3EH7F7WRSF2AW&contentType=json`,
+            `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/next7days?unitGroup=metric&include=days%2Ccurrent&iconSet=icons2&key=ZT3UKYQ382UL3EH7F7WRSF2AW&contentType=json`,
             { mode: 'cors' }
         );
 
         if (response.ok) {
             const weatherData = await response.json();
+            console.log(weatherData);
             const cityLocationSplit = await weatherData.resolvedAddress.indexOf(',');
             this.city = await weatherData.resolvedAddress.slice(0, cityLocationSplit);
             this.location = await weatherData.resolvedAddress.slice(cityLocationSplit + 2);
@@ -46,6 +47,7 @@ export class Forecast {
             Math.round(current.tempmax),
             Math.round(current.tempmin),
             Math.round(current.precipprob),
+            current.icon,
         ];
     }
 
@@ -59,6 +61,7 @@ export class Forecast {
             Math.round(day.tempmin),
             Math.round(day.tempmax),
             day.conditions,
+            day.icon,
         ];
     }
 }

@@ -48,7 +48,7 @@ export class DisplayController {
         today.dataset.weather = DisplayController.setDataWeather(data[1]);
 
         // * icon and big temperature
-        document.querySelector('.left > img').src = DisplayController.setIcon(today.dataset.weather);
+        document.querySelector('.left > img').src = require(`../../images/weather-icons/${data[6]}.png`);
         document.querySelector('.left > h1').textContent = `${data[0]} \u00B0${unit}`;
     }
 
@@ -75,7 +75,7 @@ export class DisplayController {
 
         // * update background image for section
         day.dataset.weather = DisplayController.setDataWeather(data[4]);
-        day.querySelector('img').src = this.setIcon(day.dataset.weather);
+        day.querySelector('img').src = require(`../../images/weather-icons/${data[5]}.png`);
     }
 
     static setDataWeather(condition) {
@@ -96,23 +96,6 @@ export class DisplayController {
         }
         else {
             return 'storm';
-        }
-    }
-
-    static setIcon(weather) {
-        switch (weather) {
-            case 'sunny':
-                return "//cdn.weatherapi.com/weather/64x64/day/113.png";
-            case 'snow':
-                return "//cdn.weatherapi.com/weather/64x64/day/338.png";
-            case 'rain':
-                return "//cdn.weatherapi.com/weather/64x64/day/296.png";
-            case 'cloudy':
-                return "//cdn.weatherapi.com/weather/64x64/day/116.png";
-            case 'overcast':
-                return "//cdn.weatherapi.com/weather/64x64/day/122.png";
-            case 'storm':
-                return "//cdn.weatherapi.com/weather/64x64/day/389.png";
         }
     }
 
