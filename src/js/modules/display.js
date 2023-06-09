@@ -27,10 +27,16 @@ export class DisplayController {
         }
 
         const content = [Forecast.city, Forecast.location, `Last updated: ${Forecast.date}`];
+        // * add English city name if resolved address is not in English
+        if (Forecast.cityEN !== Forecast.city) {
+            content.unshift(Forecast.cityEN);
+        }
+
+        DisplayController.checkTextDetailsLength(Forecast.cityEN !== Forecast.city);
+
+        // * Location and update time
         const textDetails = document.querySelectorAll('#text-details > *');
         textDetails.forEach((field, i) => field.textContent = content[i]);
-
-
 
         // * extra details
         const rightPanelContent = [
@@ -76,6 +82,19 @@ export class DisplayController {
         // * update background image for section
         day.dataset.weather = DisplayController.setDataWeather(data[4]);
         day.querySelector('img').src = require(`../../images/weather-icons/${data[5]}.png`);
+    }
+
+    static checkTextDetailsLength(isResolvedDifferentLang) {
+        const textDetails = document.querySelector('#text-details');
+
+        if (isResolvedDifferentLang && textDetails.childElementCount === 3) {
+            const h1 = document.createElement('h1');
+            textDetails.insertBefore(h1, textDetails.firstChild);
+            textDetails.firstChild.textContent = Forecast.cityEN;
+        }
+        else if (!isResolvedDifferentLang && textDetails.childElementCount === 4) {
+            textDetails.removeChild(textDetails.firstChild);
+        }
     }
 
     static setDataWeather(condition) {

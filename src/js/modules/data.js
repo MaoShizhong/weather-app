@@ -27,6 +27,7 @@ export class Forecast {
             const weatherData = await response.json();
             console.log(weatherData);
             const cityLocationSplit = await weatherData.resolvedAddress.indexOf(',');
+            this.cityEN = `${await weatherData.address[0].toUpperCase()}${await weatherData.address.slice(1)}`;
             this.city = await weatherData.resolvedAddress.slice(0, cityLocationSplit);
             this.location = await weatherData.resolvedAddress.slice(cityLocationSplit + 2);
             this.lastUpdatedLocalTime = `${await weatherData.days[0].datetime}T${await weatherData.currentConditions.datetime}`;
