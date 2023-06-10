@@ -26,10 +26,10 @@ export class Forecast {
         if (response.ok) {
             const weatherData = await response.json();
             console.log(weatherData);
-            const cityLocationSplit = await weatherData.resolvedAddress.indexOf(',');
-            this.cityEN = `${await weatherData.address[0].toUpperCase()}${await weatherData.address.slice(1)}`;
-            this.city = await weatherData.resolvedAddress.slice(0, cityLocationSplit);
-            this.location = await weatherData.resolvedAddress.slice(cityLocationSplit + 2);
+            const split = await weatherData.resolvedAddress.indexOf(',');
+            this.cityEN = `${await weatherData.address[0].toUpperCase()}${weatherData.address.slice(1)}`;
+            this.city = (split === - 1) ? await weatherData.resolvedAddress : weatherData.resolvedAddress.slice(0, split);
+            this.location = (split === - 1) ? await weatherData.resolvedAddress : weatherData.resolvedAddress.slice(split + 2);
             this.lastUpdatedLocalTime = `${await weatherData.days[0].datetime}T${await weatherData.currentConditions.datetime}`;
             this.forecast = await weatherData.days;
         }
